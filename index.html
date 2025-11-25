@@ -321,8 +321,27 @@ body.light-theme .search-suggest li:hover{
 }
 </style>
 
+
+<style>
+#smokeLayer{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-3;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,0.05), transparent 65%);
+  filter: blur(80px);
+  animation: smokeMove 12s infinite alternate ease-in-out;
+}
+@keyframes smokeMove{
+  0%{transform:translate(0,0);}
+  100%{transform:translate(50px,-40px);}
+}
+</style>
+
 </head>
-<body>
+<body><div id='smokeLayer'></div>
 <canvas id="bgAnim" style="position:fixed;inset:0;z-index:-1;pointer-events:none;"></canvas>
 <div id="inkLayer"></div>
 
