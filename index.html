@@ -305,30 +305,27 @@ body.light-theme .search-suggest li:hover{
 </style>
 
 <style>
-/* Animated ink-like background */
-body::before{
-  content:"";
+#inkLayer{
   position:fixed;
   inset:0;
-  background:radial-gradient(circle at 20% 30%, rgba(2,24,26,0.35), transparent 60%),
-             radial-gradient(circle at 80% 70%, rgba(2,24,26,0.25), transparent 60%);
-  animation:inkMove 12s infinite ease-in-out;
+  z-index:-2;
   pointer-events:none;
-  z-index:-1;
+  background:radial-gradient(circle at 30% 30%, rgba(0,50,60,0.25), transparent 60%),
+             radial-gradient(circle at 70% 60%, rgba(0,80,90,0.20), transparent 65%);
+  filter:blur(60px);
+  animation:inkMove 14s ease-in-out infinite alternate;
 }
 @keyframes inkMove{
-  0%{transform:scale(1) translate(0,0);}
-  50%{transform:scale(1.15) translate(-20px,10px);}
-  100%{transform:scale(1) translate(0,0);}
-}
-body.light-theme::before{
-  background:radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4), transparent 60%),
-             radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3), transparent 60%);
+  0%{transform:translate(0,0) scale(1);}
+  100%{transform:translate(-40px,25px) scale(1.3);}
 }
 </style>
-</head>
 
+</head>
 <body>
+<canvas id="bgAnim" style="position:fixed;inset:0;z-index:-1;pointer-events:none;"></canvas>
+<div id="inkLayer"></div>
+
 
 <header>
   <div class="header-inner">
@@ -1059,5 +1056,58 @@ try{
   renderPublic(DATA);
 }
 </script>
+
+<script>
+// Particles
+const canvas=document.getElementById('bgAnim');
+const ctx=canvas.getContext('2d');
+let w,h,particles=[];
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}
+addEventListener('resize',resize);resize();
+for(let i=0;i<80;i++){
+  particles.push({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    dx:(Math.random()-0.5)*0.7,
+    dy:(Math.random()-0.5)*0.7,
+    r:1.8+Math.random()*3.2,
+    a:0.15+Math.random()*0.2
+  });
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  particles.forEach(p=>{
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>w) p.dx*=-1;
+    if(p.y<0||p.y>h) p.dy*=-1;
+    ctx.fillStyle='rgba(255,255,255,'+p.a+')';
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// Light/Dark ink color adapt
+function applyInkTheme(){
+  const light = document.body.classList.contains("light-theme");
+  const ink = document.getElementById("inkLayer");
+  if(light){
+    ink.style.background = `
+      radial-gradient(circle at 25% 30%, rgba(150,200,255,0.25), transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(200,220,255,0.20), transparent 65%)
+    `;
+  }else{
+    ink.style.background = `
+      radial-gradient(circle at 30% 30%, rgba(0,50,60,0.25), transparent 60%),
+      radial-gradient(circle at 70% 60%, rgba(0,80,90,0.20), transparent 65%)
+    `;
+  }
+}
+applyInkTheme();
+new MutationObserver(applyInkTheme).observe(document.body,{attributes:true});
+</script>
+
 </body>
 </html>
