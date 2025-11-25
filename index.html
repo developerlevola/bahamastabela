@@ -340,6 +340,29 @@ body.light-theme .search-suggest li:hover{
 }
 </style>
 
+
+<style>
+/* Force title and main headers readable */
+body.light-theme h1,
+body.light-theme .title,
+body.light-theme .category {
+  color:#000 !important;
+}
+body:not(.light-theme) h1,
+body:not(.light-theme) .title,
+body:not(.light-theme) .category {
+  color:#fff !important;
+}
+
+/* Table headers Infração / Punição */
+body.light-theme table th {
+  color:#000 !important;
+}
+body:not(.light-theme) table th {
+  color:#fff !important;
+}
+</style>
+
 </head>
 <body><div id='smokeLayer'></div>
 <canvas id="bgAnim" style="position:fixed;inset:0;z-index:-1;pointer-events:none;"></canvas>
