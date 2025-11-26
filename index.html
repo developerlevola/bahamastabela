@@ -620,6 +620,33 @@ function formatPunicaoWithBadge(pun){
          '<span class="pun-text">' + escapeHtml(pun) + '</span>';
 }
 
+
+/* Categoria mapping + descrições Bahamas RP */
+const CAT_MAP = {
+  "Prisão STAFF":"Categoria 1",
+  "Tickets":"Categoria 2",
+  "Banimento com UNBAN":"Categoria 3",
+  "Banimento Permanente":"Categoria 4"
+};
+
+const CATEGORY_INFO = {
+  "Categoria 1": "",
+  "Categoria 2": `
+    <p><strong>Categoria 2 — Tickets</strong></p>
+    <p>Punições passíveis de advertências, prisões e multas.<br>
+    A equipe do Bahamas RP se reserva o direito de avaliar cada caso individualmente,
+    sempre buscando justiça e equilíbrio para manter a qualidade do roleplay e o respeito entre todos os membros.</p>
+  `,
+  "Categoria 3": `
+    <p><strong>Categoria 3 — Banimento com UNBAN</strong></p>
+    <p>Punições passíveis de Banimento com direito a retorno através do UNBAN.</p>
+  `,
+  "Categoria 4": `
+    <p><strong>Categoria 4 — Banimento Permanente</strong></p>
+    <p>Punições passíveis de Banimento permanente imediato e sem direito a UNBAN do site.</p>
+  `
+};
+
 /* render público */
 function renderPublic(dataset){
   // animação ao pesquisar / recriar tabelas
@@ -638,8 +665,18 @@ function renderPublic(dataset){
 
     const title = document.createElement('div');
     title.className='category';
-    title.textContent=cat;
-    sec.appendChild(title);
+    const displayCat = CAT_MAP[cat] || cat;
+title.textContent = displayCat;
+sec.appendChild(title);
+
+if (CATEGORY_INFO[displayCat]) {
+  const desc = document.createElement("div");
+  desc.className = "cat-desc";
+  desc.style.marginBottom = "18px";
+  desc.innerHTML = CATEGORY_INFO[displayCat];
+  sec.appendChild(desc);
+}
+
 
     const table = document.createElement('table');
     table.className='table';
@@ -684,7 +721,21 @@ function renderPublic(dataset){
       });
 
     sec.appendChild(table);
-    contentArea.appendChild(sec);
+
+if (displayCat === "Categoria 4") {
+  const dark = document.createElement("div");
+  dark.className = "cat-desc";
+  dark.style.marginTop = "18px";
+  dark.innerHTML = `
+    <p>O DARK, a depender do caso, pode resultar desde banimento temporário a banimento permanente.<br>
+    Em caso de reincidência será aplicado o banimento PERMANENTE.</p>
+    <p>A equipe do Bahamas RP se reserva o direito de avaliar cada caso individualmente,
+    sempre buscando justiça e equilíbrio para manter a qualidade do roleplay e o respeito entre todos os membros.</p>
+  `;
+  sec.appendChild(dark);
+}
+
+contentArea.appendChild(sec);
   });
 
   observeSections();
